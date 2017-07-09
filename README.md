@@ -28,15 +28,21 @@
 
 AbstractDetectingUrlHandlerMapping 中的 detectHandlers方法,这个方法取出了所有的bean，然后循环查找带有Controller的bean，并提取其中的RequestMapping信息
 
+
+
+
 protected void detectHandlers() throws BeansException {
+
     if (logger.isDebugEnabled()) {
         logger.debug("Looking for URL mappings in application context: " + getApplicationContext());
     }
+    
     String[] beanNames = (this.detectHandlersInAncestorContexts ?
             BeanFactoryUtils.beanNamesForTypeIncludingAncestors(getApplicationContext(), Object.class) :
             getApplicationContext().getBeanNamesForType(Object.class));
-
+	    
     // Take any bean name that we can determine URLs for.
+    
     for (String beanName : beanNames) {
         String[] urls = determineUrlsForHandler(beanName);
         if (!ObjectUtils.isEmpty(urls)) {
