@@ -24,3 +24,31 @@
 3、Struts采用值栈存储请求和响应的数据，通过OGNL存取数据， springmvc通过参数解析器是将request请求内容解析，并给方法形参赋值，将数据和视图封装成ModelAndView对象，最后又将ModelAndView中的模型数据通过reques域传输到页面。Jsp视图解析器默认使用jstl。
 
 
+
+
+AbstractDetectingUrlHandlerMapping 中的 detectHandlers方法,这个方法取出了所有的bean，然后循环查找带有Controller的bean，并提取其中的RequestMapping信息
+
+protected void detectHandlers() throws BeansException {
+    if (logger.isDebugEnabled()) {
+        logger.debug("Looking for URL mappings in application context: " + getApplicationContext());
+    }
+    String[] beanNames = (this.detectHandlersInAncestorContexts ?
+            BeanFactoryUtils.beanNamesForTypeIncludingAncestors(getApplicationContext(), Object.class) :
+            getApplicationContext().getBeanNamesForType(Object.class));
+
+    // Take any bean name that we can determine URLs for.
+    for (String beanName : beanNames) {
+        String[] urls = determineUrlsForHandler(beanName);
+        if (!ObjectUtils.isEmpty(urls)) {
+            // URL paths found: Let's consider it a handler.
+            registerHandler(urls, beanName);
+        }
+        else {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Rejected bean name '" + beanName + "': no URL paths identified");
+            }
+        }
+    }
+}
+
+
